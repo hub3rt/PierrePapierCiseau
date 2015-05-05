@@ -35,7 +35,6 @@ public class maFrame extends JFrame implements ActionListener {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
-        this.pack();
         
         JPanel jChoix = new JPanel();
         this.add(jChoix, BorderLayout.CENTER);
