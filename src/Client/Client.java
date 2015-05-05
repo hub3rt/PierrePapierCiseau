@@ -23,6 +23,6 @@ public class Client {
     }
     
     public static void main(String[] args) {
-        new Client("localhost", 15200);
+        new Client("localhost", 1313);
     }
 }
