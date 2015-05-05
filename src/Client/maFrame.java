@@ -5,11 +5,13 @@
  */
 package Client;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -23,6 +25,7 @@ public class maFrame extends JFrame implements ActionListener {
     private PrintWriter out;
     private BufferedReader br;
     private JRadioButton rbCiseau, rbPapier, rbPierre;
+    private JButton bEnvoyer, bQuitter;
     
     public maFrame (Socket ss){
         
@@ -35,10 +38,19 @@ public class maFrame extends JFrame implements ActionListener {
         this.pack();
         
         JPanel jChoix = new JPanel();
+        this.add(jChoix, BorderLayout.CENTER);
         
         jChoix.add(rbCiseau = new JRadioButton("Ciseau"));
         jChoix.add(rbPapier = new JRadioButton("Papier"));
         jChoix.add(rbPierre = new JRadioButton("Pierre"));
+        
+        
+        JPanel jButton = new JPanel();
+        this.add(jButton, BorderLayout.SOUTH);
+        jButton.add(bQuitter= new JButton("Quitter"));
+        jButton.add(bEnvoyer = new JButton("Envoyer"));
+        bQuitter.addActionListener(this);
+        bEnvoyer.addActionListener(this);
         
     }
 

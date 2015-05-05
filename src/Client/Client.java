@@ -16,6 +16,7 @@ public class Client {
     public Client (String ip, int port){
         try {
                 maFrame frame = new maFrame(new Socket(ip, port));
+                frame.show();
             }
         catch (Exception e) {
                 System.out.println("Problème client : "+e.getMessage());}

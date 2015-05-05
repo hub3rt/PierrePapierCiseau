@@ -19,6 +19,7 @@ public class ServeurThread implements Runnable {
     private Socket s;
     private BufferedReader in;
     private PrintWriter out;
+    private String input;
     
     public ServeurThread(Socket s) {
         
@@ -31,7 +32,8 @@ public class ServeurThread implements Runnable {
             out = new PrintWriter(s.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(s.getInputStream()));
         while (true) {
-            
+            // TODO récupérer la valeur du radio button JSON ?
+            input = in.readLine();
         }
         } catch (Exception e){
             System.out.println("Petit problème au lancement du Thread : "+ e.getMessage());
