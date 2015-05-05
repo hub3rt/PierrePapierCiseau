@@ -11,10 +11,13 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -26,6 +29,7 @@ public class maFrame extends JFrame implements ActionListener {
     private BufferedReader br;
     private JRadioButton rbCiseau, rbPapier, rbPierre;
     private JButton bEnvoyer, bQuitter;
+    private ButtonGroup BR;
     
     public maFrame (Socket ss){
         
@@ -42,7 +46,10 @@ public class maFrame extends JFrame implements ActionListener {
         jChoix.add(rbCiseau = new JRadioButton("Ciseau"));
         jChoix.add(rbPapier = new JRadioButton("Papier"));
         jChoix.add(rbPierre = new JRadioButton("Pierre"));
-        
+        BR.add(rbCiseau);
+        BR.add(rbPapier);
+        BR.add(rbPierre);
+        rbCiseau.setEnabled(true);
         
         JPanel jButton = new JPanel();
         this.add(jButton, BorderLayout.SOUTH);
@@ -53,9 +60,50 @@ public class maFrame extends JFrame implements ActionListener {
         
     }
 
+    
+    //TODO Méthode pour récupérer et envoyer la valeur du radio button choisi
+    public void envoyer(){
+        
+        try {
+            JSONObject obj = new JSONObject();
+            JSONObject objVal = new JSONObject();
+            obj.accumulate("Commande", "Envoyer");
+            
+            //En fonction du bouton radio sélectionné, on envoie la valeur au coeur.
+            if (rbCiseau.isEnabled())
+                objVal.accumulate("Valeur", "Ciseau");
+            else if (rbPapier.isEnabled())
+                objVal.accumulate("Valeur", "Papier");
+            else
+                objVal.accumulate("Valeur", "Pierre");
+            out.println(obj.toString());
+            out.println(objVal.toString());
+        } catch (JSONException e) {
+            System.out.println("Problème lors de l'envoi : " + e.getMessage());
+        }
+    }
+    
+    
+    public void quitter(){
+        
+        try {
+            JSONObject obj = new JSONObject();
+            obj.accumulate("Commande", "Quitter");
+            out.println(obj.toString());
+        } catch (JSONException e) {
+            System.out.println("Problème lors de la fermeture : " + e.getMessage());
+        }
+    }
+    
+    
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        if (e.getSource() == bQuitter){
+			System.out.println("Fermeture du client et extinction du coeur.");
+			this.quitter();
+			System.exit(0);
+		}
     }
     
 }
