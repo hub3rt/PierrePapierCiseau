@@ -66,18 +66,16 @@ public class maFrame extends JFrame implements ActionListener {
         
         try {
             JSONObject obj = new JSONObject();
-            JSONObject objVal = new JSONObject();
             obj.accumulate("Commande", "Envoyer");
             
             //En fonction du bouton radio sélectionné, on envoie la valeur au coeur.
             if (rbCiseau.isEnabled())
-                objVal.accumulate("Valeur", "Ciseau");
+                obj.accumulate("Commande", "Envoyer");
             else if (rbPapier.isEnabled())
-                objVal.accumulate("Valeur", "Papier");
+                obj.accumulate("Commande", "Envoyer");
             else
-                objVal.accumulate("Valeur", "Pierre");
+                obj.accumulate("Commande", "Envoyer");
             out.println(obj.toString());
-            out.println(objVal.toString());
         } catch (JSONException e) {
             System.out.println("Problème lors de l'envoi : " + e.getMessage());
         }
