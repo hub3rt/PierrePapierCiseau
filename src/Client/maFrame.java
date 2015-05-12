@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -28,8 +29,9 @@ public class maFrame extends JFrame implements ActionListener {
     private PrintWriter out;
     private BufferedReader br;
     private JRadioButton rbCiseau, rbPapier, rbPierre;
-    private JButton bEnvoyer, bQuitter;
+    private JButton bEnvoyer, bQuitter, bCiseaux, bPierre, bPapier;
     private ButtonGroup BR;
+    private ImageIcon iCiseaux, iPierre, iPapier;
     
     public maFrame (Socket ss){
         
@@ -46,15 +48,28 @@ public class maFrame extends JFrame implements ActionListener {
         jChoix.add(rbCiseau = new JRadioButton("Ciseau"));
         jChoix.add(rbPapier = new JRadioButton("Papier"));
         jChoix.add(rbPierre = new JRadioButton("Pierre"));
+        
+        iPierre = new ImageIcon(this.getClass().getResource("img/pierre.png" ));
+        bPierre = new JButton(iPierre); 
+        jChoix.add(bPierre);
+        
+        iPapier = new ImageIcon(this.getClass().getResource("img/papier.png" ));
+        bPapier = new JButton(iPapier); 
+        jChoix.add(bPapier);
+        
+        iCiseaux = new ImageIcon(this.getClass().getResource("img/ciseaux.png" ));
+        bCiseaux = new JButton(iCiseaux); 
+        jChoix.add(bCiseaux);
+        
         BR.add(rbCiseau);
         BR.add(rbPapier);
         BR.add(rbPierre);
         rbCiseau.setEnabled(true);
         
-        JPanel jButton = new JPanel();
-        this.add(jButton, BorderLayout.SOUTH);
-        jButton.add(bQuitter= new JButton("Quitter"));
-        jButton.add(bEnvoyer = new JButton("Envoyer"));
+        JPanel jPanelButton = new JPanel();
+        this.add(jPanelButton, BorderLayout.SOUTH);
+        jPanelButton.add(bQuitter= new JButton("Quitter"));
+        jPanelButton.add(bEnvoyer = new JButton("Envoyer"));
         bQuitter.addActionListener(this);
         bEnvoyer.addActionListener(this);
         
@@ -76,6 +91,11 @@ public class maFrame extends JFrame implements ActionListener {
             else
                 obj.accumulate("Commande", "Envoyer");
             out.println(obj.toString());
+            
+            rbCiseau.setEnabled(false);
+            rbPapier.setEnabled(false);
+            rbPierre.setEnabled(false);
+            
         } catch (JSONException e) {
             System.out.println("Problème lors de l'envoi : " + e.getMessage());
         }
@@ -102,6 +122,9 @@ public class maFrame extends JFrame implements ActionListener {
 			this.quitter();
 			System.exit(0);
 		}
+        else if (e.getSource() == bEnvoyer){
+        	this.envoyer();
+        }
     }
     
 }
