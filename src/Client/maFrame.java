@@ -78,6 +78,11 @@ public class maFrame extends JFrame implements ActionListener {
                 objVal.accumulate("Valeur", "Pierre");
             out.println(obj.toString());
             out.println(objVal.toString());
+            
+            rbCiseau.setEnabled(false);
+            rbPapier.setEnabled(false);
+            rbPierre.setEnabled(false);
+            
         } catch (JSONException e) {
             System.out.println("Problème lors de l'envoi : " + e.getMessage());
         }
@@ -104,6 +109,9 @@ public class maFrame extends JFrame implements ActionListener {
 			this.quitter();
 			System.exit(0);
 		}
+        else if (e.getSource() == bEnvoyer){
+        	this.envoyer();
+        }
     }
     
 }
