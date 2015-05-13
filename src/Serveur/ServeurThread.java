@@ -7,12 +7,9 @@ package Serveur;
 
 import java.io.*;
 import java.net.*;
-<<<<<<< HEAD
-=======
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONObject;
->>>>>>> 43a0542841377215f45262b734b74aecddbd6de7
 /**
  * 
  *
