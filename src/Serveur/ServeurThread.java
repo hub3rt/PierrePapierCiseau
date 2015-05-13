@@ -17,9 +17,9 @@ import org.json.JSONObject;
  */
 public class ServeurThread implements Runnable {
 
-    private Socket so;
-    private BufferedReader in;
-    private PrintWriter out;
+    private Socket so, socketManager;
+    private BufferedReader in, inManager;
+    private PrintWriter out, outManager;
     private JSONObject inObj;
     
     public ServeurThread(Socket s) {
@@ -27,6 +27,20 @@ public class ServeurThread implements Runnable {
         so = s;
     }
 
+    public Socket getSo() {
+        return so;
+    }
+    
+    public void createSocket(int port){
+        try {
+            socketManager = new Socket("localhost", port);
+            inManager = new BufferedReader(new InputStreamReader(socketManager.getInputStream()));
+            outManager = new PrintWriter(socketManager.getOutputStream(), true);
+        } catch (Exception e) {
+            System.out.println("Problème lors de la création du socket manager : " + e.getMessage());
+        }
+    }
+    
     @Override
     public void run() {
         try {
