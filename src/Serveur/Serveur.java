@@ -16,17 +16,23 @@ import java.util.logging.Logger;
  * @author Hubert
  */
 public class Serveur {
-        
+
 
     public Serveur(int portNumber) {
+
         
         int compteur = 10000 ;
         ArrayList<ServeurThread> lesJoueurs = new ArrayList<ServeurThread>();
 
         try {
+        	
+//        	Socket sok = new Socket("localhost", 1234);
+//        	out = new PrintWriter(sok.getOutputStream(), true);
+        	
             ServerSocket ss = new ServerSocket(portNumber);
             System.out.println("Coucou, ici le serveur.");
             while (true){
+
                 
                 Socket s = ss.accept();
                 ServeurThread st = new ServeurThread(s);

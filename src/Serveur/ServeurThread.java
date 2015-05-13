@@ -7,8 +7,6 @@ package Serveur;
 
 import java.io.*;
 import java.net.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.JSONObject;
 /**
  * 
@@ -21,6 +19,8 @@ public class ServeurThread implements Runnable {
     private BufferedReader in, inManager;
     private PrintWriter out, outManager;
     private JSONObject inObj;
+    
+    public boolean isAlive = true;
     
     public ServeurThread(Socket s) {
         
@@ -46,32 +46,29 @@ public class ServeurThread implements Runnable {
         try {
             out = new PrintWriter(so.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(so.getInputStream()));
-        while (true) {
-            // TODO récupérer la valeur du radio button JSON ?
+            System.out.println("Coeur cr�� sur le port : "+so.getPort());
+            while (true) {
             inObj = new JSONObject(in.readLine());
-            System.out.println("Coeur créé sur le port : "+so.getPort());
-                if (inObj.get("Commande").equals("Pierre")){
-                    System.out.println("Le joueur a joué pierre.");
-
-                } else if (inObj.get("Commande").equals("papier")){
-                    System.out.println("Le joueur a joué papier.");
-
-                } else if (inObj.get("Commande").equals("ciseaux")){
-                    System.out.println("Le joueur a joué ciseaux.");
-
+                if (inObj.get("Commande").equals("Jouer")){
+                	if (inObj.get("valeur").equals("pierre")){
+                        System.out.println("Le joueur a jou� pierre.");
+                	} else if (inObj.get("valeur").equals("papier")){
+                        System.out.println("Le joueur a jou� papier.");
+                    } else if (inObj.get("valeur").equals("ciseaux")){
+                        System.out.println("Le joueur a jou� ciseaux.");
+                    }
                 } else if (inObj.get("Commande").equals("Quitter")){
-                    System.out.println("Le joueur a quitté la partie.");
-                    break;
-                } else { 
+                    System.out.println("Le joueur a quitt� la partie.");
+                    isAlive = false;
                     break;
                 }
             }
         
-        System.out.println("Coeur fermé sur le port : " + so.getPort());
+        System.out.println("Coeur ferm� sur le port : " + so.getPort());
         so.close();
         
         } catch (Exception e){
-            System.out.println("Petit problème au lancement du Thread : "+ e.getMessage());
+            System.out.println("Petit probl�me au lancement du Thread : "+ e.getMessage());
         }
     }
 }

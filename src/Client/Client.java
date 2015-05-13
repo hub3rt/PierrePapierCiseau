@@ -5,21 +5,34 @@
  */
 package Client;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.Socket;
+
+import org.json.JSONObject;
 
 /**
  *
  * @author Hubert
  */
 public class Client {
-    
+    private BufferedReader br;
     public Client (String ip, int port){
         try {
-                maFrame frame = new maFrame(new Socket(ip, port));
-                frame.setVisible(true);
+//        		Socket sok = new Socket(ip, 1234);
+//    			br = new BufferedReader(new InputStreamReader(sok.getInputStream()));
+    			
+//    			JSONObject inObj = new JSONObject(br.readLine());
+//    			
+//    			if (inObj.get("isFree").equals("ok")){
+            		Socket ss = new Socket(ip, port);
+                    maFrame frame = new maFrame(ss);
+                    frame.setVisible(true);
+//    			}
+//    			sok.close();
             }
         catch (Exception e) {
-                System.out.println("ProblÃ¨me client : "+e.getMessage());}
+                System.out.println("Problème client : "+e.getMessage());}
     }
     
     public static void main(String[] args) {

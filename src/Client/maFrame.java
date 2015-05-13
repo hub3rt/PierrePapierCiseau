@@ -6,7 +6,10 @@
 package Client;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,20 +17,21 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
 import javax.imageio.ImageIO;
-import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import javax.swing.JRadioButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.sun.org.apache.xpath.internal.operations.Lte;
 
 /**
  *
@@ -41,13 +45,24 @@ public class maFrame extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private PrintWriter out;
     private BufferedReader br;
-    private JButton bEnvoyer, bQuitter, bCiseaux, bPierre, bPapier;
+    private JButton bQuitter, bCiseaux, bPierre, bPapier;
     private ImageIcon iCiseaux, iPierre, iPapier, iBandeau;
+    private JLabel lresultat, lScoreClient, lScoreAdver;
     
     public maFrame (Socket ss){
         
+		try {
+			out = new PrintWriter(ss.getOutputStream(), true);
+			br = new BufferedReader(new InputStreamReader(ss.getInputStream()));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+    	
         this.setTitle("Pierre Papier Ciseau");
-        this.setPreferredSize(new Dimension(600, 600));
+        this.setPreferredSize(new Dimension(620, 660));
+        this.setMinimumSize(new Dimension(620, 660));
+        this.setResizable(false);
         this.setLocationRelativeTo(null);
         
         // Le panel du Bandeau
@@ -69,13 +84,22 @@ public class maFrame extends JFrame implements ActionListener {
         JLabel lBandeau = new JLabel(iBandeau);
         jBandeau.add(lBandeau);
         
+        // Le panel Central, contenant choix, score et affichage du résultat
+        
+        JPanel jCentre = new JPanel();
+        this.add(jCentre, BorderLayout.CENTER);
+        
         // Le panel de Choix
         
         JPanel jChoix = new JPanel();
-        this.add(jChoix, BorderLayout.CENTER);
+        jCentre.add(jChoix, BorderLayout.NORTH);
         iPapier = new ImageIcon("img/papier.png");
         iPierre = new ImageIcon("img/pierre.png");
         iCiseaux = new ImageIcon("img/ciseaux.png");
+        
+        GridLayout layoutChoix = new GridLayout(1, 3);
+        jChoix.setPreferredSize(new Dimension(550, 130));
+        jChoix.setLayout(layoutChoix);
         
         bPierre = new JButton(iPierre);
         bPierre.setActionCommand("pierre");
@@ -93,16 +117,99 @@ public class maFrame extends JFrame implements ActionListener {
         bPapier.addActionListener(this);
         bCiseaux.addActionListener(this);
         
+        // Le panel d'affichage du score, qui va contenir un panel d'affichage de texte "score:",
+        //        un panel d'affichage de score, et les textes permettant d'identifier à qui sont les scores
+        
+        JPanel jScore = new JPanel();
+        jCentre.add(jScore, BorderLayout.CENTER);
+        jScore.setPreferredSize(new Dimension(600, 170));
+        
+        // Le panel affichant "Score :"
+        JPanel jTextScore = new JPanel();
+        jScore.add(jTextScore, BorderLayout.NORTH);
+        jTextScore.setPreferredSize(new Dimension(600, 20));
+        JLabel lTextScore = new JLabel();
+        lTextScore.setText("Score :");
+        jTextScore.add(lTextScore);
+        
+        // Le panel affichant les Scores
+        JPanel jScores = new JPanel();
+        jScore.add(jScores, BorderLayout.CENTER);
+        jScores.setPreferredSize(new Dimension(600, 100));
+        
+        // Le panel affichant le score du client
+        JPanel jScoreClient = new JPanel();
+        jScores.add(jScoreClient, BorderLayout.WEST);
+        
+        JLabel lScoreClient = new JLabel();
+        lScoreClient.setText("0");
+        lScoreClient.setFont(new Font("Sans-Serif", Font.PLAIN, 60));
+        jScoreClient.setPreferredSize(new Dimension(100, 100));
+        jScoreClient.setAlignmentX(CENTER_ALIGNMENT);
+        jScoreClient.setBackground(Color.white);
+        jScoreClient.add(lScoreClient);
+        
+        // Un panel d'écartement
+        JPanel jEcartement = new JPanel();
+        jScores.add(jEcartement, BorderLayout.CENTER);
+        jEcartement.setPreferredSize(new Dimension(100, 100));
+        
+        // Le panel affichant le score de l'adversaire
+        JPanel jScoreAdver = new JPanel();
+        jScores.add(jScoreAdver, BorderLayout.EAST);
+        
+        JLabel lScoreAdver = new JLabel();
+        lScoreAdver.setText("3");
+        lScoreAdver.setFont(new Font("Sans-Serif", Font.PLAIN, 60));
+        jScoreAdver.setPreferredSize(new Dimension(100, 100));
+        jScoreAdver.setAlignmentX(CENTER_ALIGNMENT);
+        jScoreAdver.setBackground(Color.white);
+        jScoreAdver.add(lScoreAdver);
+        
+        // Le panel affichant les textes "vous" et "adversaire"
+        JPanel jTextesIdent = new JPanel();
+        jScore.add(jTextesIdent, BorderLayout.CENTER);
+        jTextesIdent.setPreferredSize(new Dimension(600, 30));
+        
+        // Le panel affichant "vous"
+        JPanel jTextClient = new JPanel();
+        jTextClient.setPreferredSize(new Dimension(100, 30));
+        jTextClient.setBackground(Color.green);
+        jTextesIdent.add(jTextClient);
+        JLabel lTextClient = new JLabel();
+        lTextClient.setText("Vous");
+        jTextClient.add(lTextClient);
+        
+        // Un panel d'écartement
+        JPanel jTextEcartement = new JPanel();
+        jTextEcartement.setPreferredSize(new Dimension(100, 30));
+        jTextesIdent.add(jTextEcartement);
+        
+        // Le panel affichant "adversaire"
+        JPanel jTextAdver = new JPanel();
+        jTextAdver.setPreferredSize(new Dimension(100, 30));
+        jTextAdver.setBackground(Color.yellow);
+        jTextesIdent.add(jTextAdver);
+        JLabel lTextAdver = new JLabel();
+        lTextAdver.setText("Adversaire");
+        jTextAdver.add(lTextAdver);
+        
+        // Le panel affichant le résultat
+        
+        JPanel jResultat = new JPanel();
+        jCentre.add(jResultat, BorderLayout.SOUTH);
+        lresultat = new JLabel();
+        lresultat.setText("En attente de connection d'un adversaire.");
+        jResultat.add(lresultat);
+        
         // Le panel permettant de quitter
         
-        /*JPanel jQuitter = new JPanel();
+        JPanel jQuitter = new JPanel();
         this.add(jQuitter, BorderLayout.SOUTH);
         jQuitter.add(bQuitter= new JButton("Quitter"));
-        jQuitter.add(bEnvoyer = new JButton("Envoyer"));*/
-        /*bQuitter.addActionListener(this);
-        bEnvoyer.addActionListener(this);*/
+        bQuitter.addActionListener(this);
 
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.pack();
         this.setVisible(true);
     }
@@ -113,11 +220,11 @@ public class maFrame extends JFrame implements ActionListener {
         
         try {
             //En fonction du bouton, on envoie la valeur au coeur.
-            obj.accumulate("Commande", "Envoyer");
+            obj.accumulate("Commande", "Jouer");
             System.out.println(obj.toString());
-            //out.println(obj.toString());
+            out.println(obj.toString());
         } catch (JSONException e){
-        	System.out.println("ProblÃ¨me lors de l'envoi : " + e.getMessage());
+        	System.out.println("Problème lors de l'envoi : " + e.getMessage());
             
         }
     }
@@ -129,7 +236,7 @@ public class maFrame extends JFrame implements ActionListener {
             obj.accumulate("Commande", "Quitter");
             out.println(obj.toString());
         } catch (JSONException e) {
-            System.out.println("ProblÃ¨me lors de la fermeture : " + e.getMessage());
+            System.out.println("Problème lors de la fermeture : " + e.getMessage());
         }
     }
     
@@ -145,7 +252,7 @@ public class maFrame extends JFrame implements ActionListener {
         	JButton sender = (JButton) e.getSource();
         	JSONObject obj = new JSONObject();
         	try {
-				obj.accumulate("button", sender.getActionCommand());
+				obj.accumulate("valeur", sender.getActionCommand());
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
