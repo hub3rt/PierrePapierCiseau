@@ -8,6 +8,7 @@ package Client;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -46,7 +47,7 @@ public class maFrame extends JFrame implements ActionListener {
     private BufferedReader br;
     private JButton bQuitter, bCiseaux, bPierre, bPapier;
     private ImageIcon iCiseaux, iPierre, iPapier, iBandeau;
-    private JLabel lresultat;
+    private JLabel lresultat, lScoreClient, lScoreAdver;
     
     public maFrame (Socket ss){
         
@@ -59,7 +60,9 @@ public class maFrame extends JFrame implements ActionListener {
 		}
     	
         this.setTitle("Pierre Papier Ciseau");
-        this.setPreferredSize(new Dimension(620, 700));
+        this.setPreferredSize(new Dimension(620, 660));
+        this.setMinimumSize(new Dimension(620, 660));
+        this.setResizable(false);
         this.setLocationRelativeTo(null);
         
         // Le panel du Bandeau
@@ -119,7 +122,7 @@ public class maFrame extends JFrame implements ActionListener {
         
         JPanel jScore = new JPanel();
         jCentre.add(jScore, BorderLayout.CENTER);
-        jScore.setPreferredSize(new Dimension(600, 220));
+        jScore.setPreferredSize(new Dimension(600, 170));
         
         // Le panel affichant "Score :"
         JPanel jTextScore = new JPanel();
@@ -138,12 +141,13 @@ public class maFrame extends JFrame implements ActionListener {
         JPanel jScoreClient = new JPanel();
         jScores.add(jScoreClient, BorderLayout.WEST);
         
-        JLabel lTextScore2 = new JLabel();
-        lTextScore2.setText("Score :");
+        JLabel lScoreClient = new JLabel();
+        lScoreClient.setText("0");
+        lScoreClient.setFont(new Font("Sans-Serif", Font.PLAIN, 60));
         jScoreClient.setPreferredSize(new Dimension(100, 100));
         jScoreClient.setAlignmentX(CENTER_ALIGNMENT);
         jScoreClient.setBackground(Color.white);
-        jScoreClient.add(lTextScore2);
+        jScoreClient.add(lScoreClient);
         
         // Un panel d'écartement
         JPanel jEcartement = new JPanel();
@@ -154,14 +158,41 @@ public class maFrame extends JFrame implements ActionListener {
         JPanel jScoreAdver = new JPanel();
         jScores.add(jScoreAdver, BorderLayout.EAST);
         
-        JLabel lTextScore3 = new JLabel();
-        lTextScore3.setText("Score :");
+        JLabel lScoreAdver = new JLabel();
+        lScoreAdver.setText("3");
+        lScoreAdver.setFont(new Font("Sans-Serif", Font.PLAIN, 60));
         jScoreAdver.setPreferredSize(new Dimension(100, 100));
         jScoreAdver.setAlignmentX(CENTER_ALIGNMENT);
         jScoreAdver.setBackground(Color.white);
-        jScoreAdver.add(lTextScore3);
+        jScoreAdver.add(lScoreAdver);
         
         // Le panel affichant les textes "vous" et "adversaire"
+        JPanel jTextesIdent = new JPanel();
+        jScore.add(jTextesIdent, BorderLayout.CENTER);
+        jTextesIdent.setPreferredSize(new Dimension(600, 30));
+        
+        // Le panel affichant "vous"
+        JPanel jTextClient = new JPanel();
+        jTextClient.setPreferredSize(new Dimension(100, 30));
+        jTextClient.setBackground(Color.green);
+        jTextesIdent.add(jTextClient);
+        JLabel lTextClient = new JLabel();
+        lTextClient.setText("Vous");
+        jTextClient.add(lTextClient);
+        
+        // Un panel d'écartement
+        JPanel jTextEcartement = new JPanel();
+        jTextEcartement.setPreferredSize(new Dimension(100, 30));
+        jTextesIdent.add(jTextEcartement);
+        
+        // Le panel affichant "adversaire"
+        JPanel jTextAdver = new JPanel();
+        jTextAdver.setPreferredSize(new Dimension(100, 30));
+        jTextAdver.setBackground(Color.yellow);
+        jTextesIdent.add(jTextAdver);
+        JLabel lTextAdver = new JLabel();
+        lTextAdver.setText("Adversaire");
+        jTextAdver.add(lTextAdver);
         
         // Le panel affichant le résultat
         
@@ -178,7 +209,7 @@ public class maFrame extends JFrame implements ActionListener {
         jQuitter.add(bQuitter= new JButton("Quitter"));
         bQuitter.addActionListener(this);
 
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.pack();
         this.setVisible(true);
     }
@@ -193,7 +224,7 @@ public class maFrame extends JFrame implements ActionListener {
             System.out.println(obj.toString());
             out.println(obj.toString());
         } catch (JSONException e){
-        	System.out.println("ProblÃ¨me lors de l'envoi : " + e.getMessage());
+        	System.out.println("Problème lors de l'envoi : " + e.getMessage());
             
         }
     }
@@ -205,7 +236,7 @@ public class maFrame extends JFrame implements ActionListener {
             obj.accumulate("Commande", "Quitter");
             out.println(obj.toString());
         } catch (JSONException e) {
-            System.out.println("ProblÃ¨me lors de la fermeture : " + e.getMessage());
+            System.out.println("Problème lors de la fermeture : " + e.getMessage());
         }
     }
     
