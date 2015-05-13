@@ -28,9 +28,7 @@ public class maFrame extends JFrame implements ActionListener {
     
     private PrintWriter out;
     private BufferedReader br;
-    private JRadioButton rbCiseau, rbPapier, rbPierre;
     private JButton bEnvoyer, bQuitter, bCiseaux, bPierre, bPapier;
-    private ButtonGroup BR;
     private ImageIcon iCiseaux, iPierre, iPapier;
     
     public maFrame (Socket ss){
@@ -45,10 +43,6 @@ public class maFrame extends JFrame implements ActionListener {
         JPanel jChoix = new JPanel();
         this.add(jChoix, BorderLayout.CENTER);
         
-        jChoix.add(rbCiseau = new JRadioButton("Ciseau"));
-        jChoix.add(rbPapier = new JRadioButton("Papier"));
-        jChoix.add(rbPierre = new JRadioButton("Pierre"));
-        
         iPierre = new ImageIcon(this.getClass().getResource("img/pierre.png" ));
         bPierre = new JButton(iPierre); 
         jChoix.add(bPierre);
@@ -61,11 +55,6 @@ public class maFrame extends JFrame implements ActionListener {
         bCiseaux = new JButton(iCiseaux); 
         jChoix.add(bCiseaux);
         
-        BR.add(rbCiseau);
-        BR.add(rbPapier);
-        BR.add(rbPierre);
-        rbCiseau.setEnabled(true);
-        
         JPanel jPanelButton = new JPanel();
         this.add(jPanelButton, BorderLayout.SOUTH);
         jPanelButton.add(bQuitter= new JButton("Quitter"));
@@ -77,30 +66,44 @@ public class maFrame extends JFrame implements ActionListener {
 
     
     //TODO Méthode pour récupérer et envoyer la valeur du radio button choisi
-    public void envoyer(){
+    public void pierre(){
         
         try {
             JSONObject obj = new JSONObject();
-            obj.accumulate("Commande", "Envoyer");
-            
-            //En fonction du bouton radio sélectionné, on envoie la valeur au coeur.
-            if (rbCiseau.isEnabled())
-                obj.accumulate("Commande", "Envoyer");
-            else if (rbPapier.isEnabled())
-                obj.accumulate("Commande", "Envoyer");
-            else
-                obj.accumulate("Commande", "Envoyer");
+            obj.accumulate("Commande", "pierre");
             out.println(obj.toString());
-            
-            rbCiseau.setEnabled(false);
-            rbPapier.setEnabled(false);
-            rbPierre.setEnabled(false);
+            System.out.println("Le joueur joue pierre.");
             
         } catch (JSONException e) {
             System.out.println("Problème lors de l'envoi : " + e.getMessage());
         }
     }
     
+    public void papier(){
+        
+        try {
+            JSONObject obj = new JSONObject();
+            obj.accumulate("Commande", "papier");
+            out.println(obj.toString());
+            System.out.println("Le joueur joue papier.");
+            
+        } catch (JSONException e) {
+            System.out.println("Problème lors de l'envoi : " + e.getMessage());
+        }
+    }
+    
+    public void ciseaux(){
+        
+        try {
+            JSONObject obj = new JSONObject();
+            obj.accumulate("Commande", "ciseaux");
+            out.println(obj.toString());
+            System.out.println("Le joueur joue ciseaux.");
+            
+        } catch (JSONException e) {
+            System.out.println("Problème lors de l'envoi : " + e.getMessage());
+        }
+    }
     
     public void quitter(){
         
@@ -118,13 +121,15 @@ public class maFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         
         if (e.getSource() == bQuitter){
-			System.out.println("Fermeture du client et extinction du coeur.");
-			this.quitter();
-			System.exit(0);
-		}
-        else if (e.getSource() == bEnvoyer){
-        	this.envoyer();
+            System.out.println("Fermeture du client et extinction du coeur.");
+            this.quitter();
+            System.exit(0);
+	} else if (e.getSource() == bPierre){
+            this.pierre();
+        } else if (e.getSource() == bPapier){
+            this.papier();
+        } else if (e.getSource() == bCiseaux){
+            this.ciseaux();
         }
     }
-    
 }

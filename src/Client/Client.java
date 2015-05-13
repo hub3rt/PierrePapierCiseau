@@ -5,6 +5,8 @@
  */
 package Client;
 
+import java.io.BufferedReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
@@ -13,10 +15,12 @@ import java.net.Socket;
  */
 public class Client {
     
+    private BufferedReader in;
+    private PrintWriter out;
+    
     public Client (String ip, int port){
         try {
                 maFrame frame = new maFrame(new Socket(ip, port));
-                frame.show();
             }
         catch (Exception e) {
                 System.out.println("Problème client : "+e.getMessage());}
