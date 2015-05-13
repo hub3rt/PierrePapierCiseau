@@ -33,8 +33,8 @@ public class maFrame extends JFrame implements ActionListener {
     
     public maFrame (Socket ss){
         
-        this.setTitle("Pierre Papier Ciseau");
-        this.setSize(450,250);
+        this.setTitle("Pierre Papier Ciseaux");
+        this.setSize(550,350);
         
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -44,15 +44,15 @@ public class maFrame extends JFrame implements ActionListener {
         this.add(jChoix, BorderLayout.CENTER);
         
         iPierre = new ImageIcon(this.getClass().getResource("img/pierre.png" ));
-        bPierre = new JButton(iPierre); 
+        bPierre = new JButton("pierre", iPierre); 
         jChoix.add(bPierre);
         
         iPapier = new ImageIcon(this.getClass().getResource("img/papier.png" ));
-        bPapier = new JButton(iPapier); 
+        bPapier = new JButton("papier", iPapier); 
         jChoix.add(bPapier);
         
         iCiseaux = new ImageIcon(this.getClass().getResource("img/ciseaux.png" ));
-        bCiseaux = new JButton(iCiseaux); 
+        bCiseaux = new JButton("ciseaux", iCiseaux); 
         jChoix.add(bCiseaux);
         
         JPanel jPanelButton = new JPanel();
