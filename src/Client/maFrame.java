@@ -6,17 +6,26 @@
 package Client;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+
+import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
 import javax.swing.JRadioButton;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,75 +35,88 @@ import org.json.JSONObject;
  */
 public class maFrame extends JFrame implements ActionListener {
     
-    private PrintWriter out;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private PrintWriter out;
     private BufferedReader br;
-    private JRadioButton rbCiseau, rbPapier, rbPierre;
     private JButton bEnvoyer, bQuitter, bCiseaux, bPierre, bPapier;
-    private ButtonGroup BR;
-    private ImageIcon iCiseaux, iPierre, iPapier;
+    private ImageIcon iCiseaux, iPierre, iPapier, iBandeau;
     
     public maFrame (Socket ss){
         
         this.setTitle("Pierre Papier Ciseau");
-        this.setSize(450,250);
-        
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setPreferredSize(new Dimension(600, 600));
         this.setLocationRelativeTo(null);
-        this.setVisible(true);
+        
+        // Le panel du Bandeau
+        
+        JPanel jBandeau = new JPanel();
+        this.add(jBandeau, BorderLayout.NORTH);
+        
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File("img/bandeau.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        Image dimg = img.getScaledInstance(500, 230,
+                Image.SCALE_SMOOTH);
+        
+        iBandeau = new ImageIcon(dimg);
+        JLabel lBandeau = new JLabel(iBandeau);
+        jBandeau.add(lBandeau);
+        
+        // Le panel de Choix
         
         JPanel jChoix = new JPanel();
         this.add(jChoix, BorderLayout.CENTER);
         
-        jChoix.add(rbCiseau = new JRadioButton("Ciseau"));
-        jChoix.add(rbPapier = new JRadioButton("Papier"));
-        jChoix.add(rbPierre = new JRadioButton("Pierre"));
+        iPapier = new ImageIcon("img/papier.png");
+        iPierre = new ImageIcon("img/pierre.png");
+        iCiseaux = new ImageIcon("img/ciseaux.png");
         
-        iPierre = new ImageIcon(this.getClass().getResource("img/pierre.png" ));
-        bPierre = new JButton(iPierre); 
+        bPierre = new JButton(iPierre);
+        bPierre.setActionCommand("pierre");
         jChoix.add(bPierre);
         
-        iPapier = new ImageIcon(this.getClass().getResource("img/papier.png" ));
-        bPapier = new JButton(iPapier); 
+        bPapier = new JButton(iPapier);
+        bPapier.setActionCommand("papier");
         jChoix.add(bPapier);
         
-        iCiseaux = new ImageIcon(this.getClass().getResource("img/ciseaux.png" ));
-        bCiseaux = new JButton(iCiseaux); 
+        bCiseaux = new JButton(iCiseaux);
+        bCiseaux.setActionCommand("ciseaux");
         jChoix.add(bCiseaux);
         
-        BR.add(rbCiseau);
-        BR.add(rbPapier);
-        BR.add(rbPierre);
-        rbCiseau.setEnabled(true);
+        bPierre.addActionListener(this);
+        bPapier.addActionListener(this);
+        bCiseaux.addActionListener(this);
         
-        JPanel jPanelButton = new JPanel();
-        this.add(jPanelButton, BorderLayout.SOUTH);
-        jPanelButton.add(bQuitter= new JButton("Quitter"));
-        jPanelButton.add(bEnvoyer = new JButton("Envoyer"));
-        bQuitter.addActionListener(this);
-        bEnvoyer.addActionListener(this);
+        // Le panel permettant de quitter
         
+        /*JPanel jQuitter = new JPanel();
+        this.add(jQuitter, BorderLayout.SOUTH);
+        jQuitter.add(bQuitter= new JButton("Quitter"));
+        jQuitter.add(bEnvoyer = new JButton("Envoyer"));*/
+        /*bQuitter.addActionListener(this);
+        bEnvoyer.addActionListener(this);*/
+
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.pack();
+        this.setVisible(true);
     }
 
     
     //TODO Méthode pour récupérer et envoyer la valeur du radio button choisi
-    public void envoyer(){
+    public void envoyer(JSONObject obj){
         
         try {
-            JSONObject obj = new JSONObject();
+            //En fonction du bouton, on envoie la valeur au coeur.
             obj.accumulate("Commande", "Envoyer");
-            
-            //En fonction du bouton radio sélectionné, on envoie la valeur au coeur.
-            if (rbCiseau.isEnabled())
-                obj.accumulate("Commande", "Envoyer");
-            else if (rbPapier.isEnabled())
-                obj.accumulate("Commande", "Envoyer");
-            else
-                obj.accumulate("Commande", "Envoyer");
-            out.println(obj.toString());
-            
-            rbCiseau.setEnabled(false);
-            rbPapier.setEnabled(false);
-            rbPierre.setEnabled(false);
+            System.out.println(obj.toString());
+            //out.println(obj.toString());
             
         } catch (JSONException e) {
             System.out.println("Problème lors de l'envoi : " + e.getMessage());
@@ -122,8 +144,16 @@ public class maFrame extends JFrame implements ActionListener {
 			this.quitter();
 			System.exit(0);
 		}
-        else if (e.getSource() == bEnvoyer){
-        	this.envoyer();
+        else if (e.getSource() == bCiseaux || e.getSource() == bPapier || e.getSource() == bPierre){
+        	JButton sender = (JButton) e.getSource();
+        	JSONObject obj = new JSONObject();
+        	try {
+				obj.accumulate("button", sender.getActionCommand());
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+        	this.envoyer(obj);
         }
     }
     

@@ -15,9 +15,11 @@ import java.util.logging.Logger;
  * @author Hubert
  */
 public class Serveur {
-
+	
+	int numberOfClients;
 
     public Serveur(int portNumber) {
+    	numberOfClients = 0;
 
         try {
             ServerSocket ss = new ServerSocket(portNumber);
@@ -25,8 +27,14 @@ public class Serveur {
             while (true){
                 Socket s = ss.accept();
                 new Thread(new ServeurThread(s)).start();
+                numberOfClients++;
                 System.out.println("Un client est connecté sur le socket "+s);
+                
+                if(numberOfClients == 2){
+                	break;
+                }
             }
+            ss.close();
         } catch (IOException ex) {
             Logger.getLogger(Serveur.class.getName()).log(Level.SEVERE, null, ex);
         }
