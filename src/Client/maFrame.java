@@ -6,7 +6,9 @@
 package Client;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,6 +30,8 @@ import javax.swing.JLabel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.sun.org.apache.xpath.internal.operations.Lte;
+
 /**
  *
  * @author Hubert
@@ -42,6 +46,7 @@ public class maFrame extends JFrame implements ActionListener {
     private BufferedReader br;
     private JButton bQuitter, bCiseaux, bPierre, bPapier;
     private ImageIcon iCiseaux, iPierre, iPapier, iBandeau;
+    private JLabel lresultat;
     
     public maFrame (Socket ss){
         
@@ -54,7 +59,7 @@ public class maFrame extends JFrame implements ActionListener {
 		}
     	
         this.setTitle("Pierre Papier Ciseau");
-        this.setPreferredSize(new Dimension(600, 600));
+        this.setPreferredSize(new Dimension(620, 700));
         this.setLocationRelativeTo(null);
         
         // Le panel du Bandeau
@@ -76,13 +81,22 @@ public class maFrame extends JFrame implements ActionListener {
         JLabel lBandeau = new JLabel(iBandeau);
         jBandeau.add(lBandeau);
         
+        // Le panel Central, contenant choix, score et affichage du résultat
+        
+        JPanel jCentre = new JPanel();
+        this.add(jCentre, BorderLayout.CENTER);
+        
         // Le panel de Choix
         
         JPanel jChoix = new JPanel();
-        this.add(jChoix, BorderLayout.CENTER);
+        jCentre.add(jChoix, BorderLayout.NORTH);
         iPapier = new ImageIcon("img/papier.png");
         iPierre = new ImageIcon("img/pierre.png");
         iCiseaux = new ImageIcon("img/ciseaux.png");
+        
+        GridLayout layoutChoix = new GridLayout(1, 3);
+        jChoix.setPreferredSize(new Dimension(550, 130));
+        jChoix.setLayout(layoutChoix);
         
         bPierre = new JButton(iPierre);
         bPierre.setActionCommand("pierre");
@@ -99,6 +113,63 @@ public class maFrame extends JFrame implements ActionListener {
         bPierre.addActionListener(this);
         bPapier.addActionListener(this);
         bCiseaux.addActionListener(this);
+        
+        // Le panel d'affichage du score, qui va contenir un panel d'affichage de texte "score:",
+        //        un panel d'affichage de score, et les textes permettant d'identifier à qui sont les scores
+        
+        JPanel jScore = new JPanel();
+        jCentre.add(jScore, BorderLayout.CENTER);
+        jScore.setPreferredSize(new Dimension(600, 220));
+        
+        // Le panel affichant "Score :"
+        JPanel jTextScore = new JPanel();
+        jScore.add(jTextScore, BorderLayout.NORTH);
+        jTextScore.setPreferredSize(new Dimension(600, 20));
+        JLabel lTextScore = new JLabel();
+        lTextScore.setText("Score :");
+        jTextScore.add(lTextScore);
+        
+        // Le panel affichant les Scores
+        JPanel jScores = new JPanel();
+        jScore.add(jScores, BorderLayout.CENTER);
+        jScores.setPreferredSize(new Dimension(600, 100));
+        
+        // Le panel affichant le score du client
+        JPanel jScoreClient = new JPanel();
+        jScores.add(jScoreClient, BorderLayout.WEST);
+        
+        JLabel lTextScore2 = new JLabel();
+        lTextScore2.setText("Score :");
+        jScoreClient.setPreferredSize(new Dimension(100, 100));
+        jScoreClient.setAlignmentX(CENTER_ALIGNMENT);
+        jScoreClient.setBackground(Color.white);
+        jScoreClient.add(lTextScore2);
+        
+        // Un panel d'écartement
+        JPanel jEcartement = new JPanel();
+        jScores.add(jEcartement, BorderLayout.CENTER);
+        jEcartement.setPreferredSize(new Dimension(100, 100));
+        
+        // Le panel affichant le score de l'adversaire
+        JPanel jScoreAdver = new JPanel();
+        jScores.add(jScoreAdver, BorderLayout.EAST);
+        
+        JLabel lTextScore3 = new JLabel();
+        lTextScore3.setText("Score :");
+        jScoreAdver.setPreferredSize(new Dimension(100, 100));
+        jScoreAdver.setAlignmentX(CENTER_ALIGNMENT);
+        jScoreAdver.setBackground(Color.white);
+        jScoreAdver.add(lTextScore3);
+        
+        // Le panel affichant les textes "vous" et "adversaire"
+        
+        // Le panel affichant le résultat
+        
+        JPanel jResultat = new JPanel();
+        jCentre.add(jResultat, BorderLayout.SOUTH);
+        lresultat = new JLabel();
+        lresultat.setText("En attente de connection d'un adversaire.");
+        jResultat.add(lresultat);
         
         // Le panel permettant de quitter
         
