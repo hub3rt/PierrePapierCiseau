@@ -7,6 +7,8 @@ package Serveur;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,26 +17,27 @@ import java.util.logging.Logger;
  * @author Hubert
  */
 public class Serveur {
-	
-	int numberOfClients;
+	ArrayList<ServeurThread> threadsList;
+	PrintWriter out;
 
     public Serveur(int portNumber) {
-    	numberOfClients = 0;
+    	
+    	threadsList = new ArrayList<ServeurThread>();
 
         try {
+        	
+//        	Socket sok = new Socket("localhost", 1234);
+//        	out = new PrintWriter(sok.getOutputStream(), true);
+        	
             ServerSocket ss = new ServerSocket(portNumber);
             System.out.println("Coucou, ici le serveur.");
             while (true){
-                Socket s = ss.accept();
-                new Thread(new ServeurThread(s)).start();
-                numberOfClients++;
-                System.out.println("Un client est connectÃ© sur le socket "+s);
-                
-                if(numberOfClients == 2){
-                	break;
-                }
+                    Socket s = ss.accept();
+                    ServeurThread coeur = new ServeurThread(s);
+                    threadsList.add(coeur);
+                    new Thread(coeur).start();
+                    System.out.println("Un client est connecté sur le socket "+s);
             }
-            ss.close();
         } catch (IOException ex) {
             Logger.getLogger(Serveur.class.getName()).log(Level.SEVERE, null, ex);
         }

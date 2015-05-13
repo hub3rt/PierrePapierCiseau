@@ -14,17 +14,16 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
 import javax.imageio.ImageIO;
-import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import javax.swing.JRadioButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,11 +40,19 @@ public class maFrame extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private PrintWriter out;
     private BufferedReader br;
-    private JButton bEnvoyer, bQuitter, bCiseaux, bPierre, bPapier;
+    private JButton bQuitter, bCiseaux, bPierre, bPapier;
     private ImageIcon iCiseaux, iPierre, iPapier, iBandeau;
     
     public maFrame (Socket ss){
         
+		try {
+			out = new PrintWriter(ss.getOutputStream(), true);
+			br = new BufferedReader(new InputStreamReader(ss.getInputStream()));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+    	
         this.setTitle("Pierre Papier Ciseau");
         this.setPreferredSize(new Dimension(600, 600));
         this.setLocationRelativeTo(null);
@@ -95,12 +102,10 @@ public class maFrame extends JFrame implements ActionListener {
         
         // Le panel permettant de quitter
         
-        /*JPanel jQuitter = new JPanel();
+        JPanel jQuitter = new JPanel();
         this.add(jQuitter, BorderLayout.SOUTH);
         jQuitter.add(bQuitter= new JButton("Quitter"));
-        jQuitter.add(bEnvoyer = new JButton("Envoyer"));*/
-        /*bQuitter.addActionListener(this);
-        bEnvoyer.addActionListener(this);*/
+        bQuitter.addActionListener(this);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
@@ -113,9 +118,9 @@ public class maFrame extends JFrame implements ActionListener {
         
         try {
             //En fonction du bouton, on envoie la valeur au coeur.
-            obj.accumulate("Commande", "Envoyer");
+            obj.accumulate("Commande", "Jouer");
             System.out.println(obj.toString());
-            //out.println(obj.toString());
+            out.println(obj.toString());
         } catch (JSONException e){
         	System.out.println("Problème lors de l'envoi : " + e.getMessage());
             
@@ -145,7 +150,7 @@ public class maFrame extends JFrame implements ActionListener {
         	JButton sender = (JButton) e.getSource();
         	JSONObject obj = new JSONObject();
         	try {
-				obj.accumulate("button", sender.getActionCommand());
+				obj.accumulate("valeur", sender.getActionCommand());
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
