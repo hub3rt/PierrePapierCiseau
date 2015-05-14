@@ -124,7 +124,7 @@ public class maFrame extends JFrame implements ActionListener {
         bCiseaux.addActionListener(this);
         
         // Le panel d'affichage du score, qui va contenir un panel d'affichage de texte "score:",
-        //        un panel d'affichage de score, et les textes permettant d'identifier à qui sont les scores
+        //        un panel d'affichage de score, et les textes permettant d'identifier Ã© qui sont les scores
         
         JPanel jScore = new JPanel();
         jCentre.add(jScore, BorderLayout.CENTER);
@@ -221,7 +221,7 @@ public class maFrame extends JFrame implements ActionListener {
         
 		try {
 			in = new JSONObject(br.readLine());
-	        lresultat.setText("Adversaire connecté, veuillez choisir un mouvement.");
+	        lresultat.setText("Adversaire connectÃ©, veuillez choisir un mouvement.");
 		} catch (JSONException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -244,20 +244,20 @@ public class maFrame extends JFrame implements ActionListener {
 				
 				if (in.get("Resultat").equals("W")){
 					scoreClient += 1;
-					reponse = "Manche gagnée, ";
+					reponse = "Manche gagnÃ©e, ";
 				} else if (in.get("Resultat").equals("L")){
 					scoreAdver += 1;
 					reponse = "Manche perdue, ";
 				} else if (in.get("Resultat").equals("E")){
-					reponse = "Egalité, ";
+					reponse = "EgalitÃ©, ";
 				} else if (in.get("Resultat").equals("A")){
-					reponse = "Votre adversaire a abandonné, vous avez gagné";
+					reponse = "Votre adversaire a abandonnÃ©, vous avez gagnÃ©";
 					abandon = true;
 				}
 				
 				if (!abandon){
 					if (scoreClient == 5){
-						reponse = "Bien joué, vous avez gagné!";
+						reponse = "Bien jouÃ©, vous avez gagnÃ©!";
 					} else if (scoreAdver == 5){
 						reponse = "Vous avez perdu, abruti!";
 					} else {
@@ -274,7 +274,7 @@ public class maFrame extends JFrame implements ActionListener {
 				e.printStackTrace();
 			}
         } catch (JSONException e){
-        	System.out.println("Problème lors de l'envoi : " + e.getMessage());
+        	System.out.println("ProblÃ¨me lors de l'envoi : " + e.getMessage());
             
         }
     }
@@ -286,7 +286,7 @@ public class maFrame extends JFrame implements ActionListener {
             obj.accumulate("Commande", "Quitter");
             out.println(obj.toString());
         } catch (JSONException e) {
-            System.out.println("Problème lors de la fermeture : " + e.getMessage());
+            System.out.println("ProblÃ¨me lors de la fermeture : " + e.getMessage());
         }
     }
     

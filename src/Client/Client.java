@@ -24,7 +24,7 @@ public class Client {
                 frame.setVisible(true);
             }
         catch (Exception e) {
-                System.out.println("Problème client : "+e.getMessage());}
+                System.out.println("ProblÃ¨me client : "+e.getMessage());}
     }
     
     public static void main(String[] args) {

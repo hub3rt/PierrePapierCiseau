@@ -44,10 +44,10 @@ public class ServerManager implements Runnable {
             in2 = new BufferedReader(new InputStreamReader(so2.getInputStream()));
             out2 = new PrintWriter(so2.getOutputStream(), true);
             
-            System.out.println("Connexions établies");
+            System.out.println("Connexions Ã©tablies");
             
         } catch (Exception e) {
-            System.out.println("Problème au lancement du Manager : " + e.getMessage());
+            System.out.println("ProblÃ¨me au lancement du Manager : " + e.getMessage());
         }
     }
     

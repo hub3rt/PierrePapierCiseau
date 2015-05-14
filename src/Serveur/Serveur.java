@@ -34,7 +34,7 @@ public class Serveur {
                 Socket s = ss.accept();
                 ServeurThread st = new ServeurThread(s);
                 new Thread(st).start();
-                System.out.println("Un client est connecté sur le socket "+s);
+                System.out.println("Un client est connectÃ© sur le socket "+s);
                 lesJoueurs.add(st);
                 if (lesJoueurs.size()==2){
                    
