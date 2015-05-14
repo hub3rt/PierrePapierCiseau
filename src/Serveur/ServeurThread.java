@@ -20,7 +20,7 @@ public class ServeurThread implements Runnable {
     private Socket so, socketManager;
     private BufferedReader in, inManager;
     private PrintWriter out, outManager;
-    private JSONObject inObj;
+    private JSONObject inObj, outObj, inObjManager, outObjManager;
     
     public boolean isAlive = true;
     
@@ -45,7 +45,13 @@ public class ServeurThread implements Runnable {
             socketManager = new Socket("localhost", port);
             inManager = new BufferedReader(new InputStreamReader(socketManager.getInputStream()));
             outManager = new PrintWriter(socketManager.getOutputStream(), true);
+            outObjManager = new JSONObject();
+            outObjManager.accumulate("Etat", "NJ");
+			outManager.println(outObjManager.toString());
             System.out.println("Socket créé avec le manager");
+            outObj = new JSONObject();
+            outObj.accumulate("connection", "ok");
+            out.println(outObj.toString());
         } catch (Exception e) {
             System.out.println("Problème lors de la création du socket manager : " + e.getMessage());
         }
@@ -58,17 +64,42 @@ public class ServeurThread implements Runnable {
 				inObj = new JSONObject(in.readLine());
                 if (inObj.get("Commande").equals("Jouer")){
                 	if (inObj.get("valeur").equals("pierre")){
-                        System.out.println("Le joueur a joué pierre.");
+                		outObjManager = new JSONObject();
+                		outObjManager.accumulate("Etat", "Pierre");
+                        outManager.println(outObjManager.toString());
+                        System.out.println("Vous avez joué Pierre");
                 	} else if (inObj.get("valeur").equals("papier")){
-                        System.out.println("Le joueur a joué papier.");
+                		outObjManager = new JSONObject();
+                		outObjManager.accumulate("Etat", "Papier");
+                        outManager.println(outObjManager.toString());
+                        System.out.println("Vous avez joué Papier");
                     } else if (inObj.get("valeur").equals("ciseaux")){
-                        System.out.println("Le joueur a joué ciseaux.");
+                		outObjManager = new JSONObject();
+                		outObjManager.accumulate("Etat", "Ciseaux");
+                        outManager.println(outObjManager.toString());
+                        System.out.println("Vous avez joué Ciseaux");
                     }
                 } else if (inObj.get("Commande").equals("Quitter")){
                     System.out.println("Le joueur a quitté la partie.");
+
+                    outObjManager = new JSONObject();
+                    outObjManager.accumulate("Etat", "Quitter");
+        			outManager.println(outObjManager.toString());
+        			
                     isAlive = false;
                     break;
                 }
+                
+                inObjManager = new JSONObject(inManager.readLine());
+                System.out.println(inObjManager);
+                
+            	outObj = new JSONObject();
+            	outObj.accumulate("Resultat", inObjManager.get("Resultat"));
+            	out.println(outObj.toString());
+                
+                outObjManager = new JSONObject();
+                outObjManager.accumulate("Etat", "NJ");
+    			outManager.println(outObjManager.toString());
             }
 	        System.out.println("Coeur fermé sur le port : " + so.getPort());
 	        so.close();

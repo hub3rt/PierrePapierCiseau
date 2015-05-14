@@ -48,9 +48,15 @@ public class maFrame extends JFrame implements ActionListener {
     private JButton bQuitter, bCiseaux, bPierre, bPapier;
     private ImageIcon iCiseaux, iPierre, iPapier, iBandeau;
     private JLabel lresultat, lScoreClient, lScoreAdver;
+    private JSONObject in;
+    private int scoreClient, scoreAdver;
+    private boolean abandon = false;
     
     public maFrame (Socket ss){
         
+    	scoreClient = 0;
+    	scoreAdver = 0;
+    	
 		try {
 			out = new PrintWriter(ss.getOutputStream(), true);
 			br = new BufferedReader(new InputStreamReader(ss.getInputStream()));
@@ -159,7 +165,7 @@ public class maFrame extends JFrame implements ActionListener {
         jScores.add(jScoreAdver, BorderLayout.EAST);
         
         lScoreAdver = new JLabel();
-        lScoreAdver.setText("3");
+        lScoreAdver.setText("0");
         lScoreAdver.setFont(new Font("Sans-Serif", Font.PLAIN, 60));
         jScoreAdver.setPreferredSize(new Dimension(100, 100));
         jScoreAdver.setAlignmentX(CENTER_ALIGNMENT);
@@ -212,6 +218,14 @@ public class maFrame extends JFrame implements ActionListener {
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.pack();
         this.setVisible(true);
+        
+		try {
+			in = new JSONObject(br.readLine());
+	        lresultat.setText("Adversaire connecté, veuillez choisir un mouvement.");
+		} catch (JSONException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     
@@ -222,6 +236,43 @@ public class maFrame extends JFrame implements ActionListener {
             //En fonction du bouton, on envoie la valeur au coeur.
             obj.accumulate("Commande", "Jouer");
             out.println(obj.toString());
+            try {
+				in = new JSONObject(br.readLine());
+				System.out.println(in);
+				
+				String reponse = "";
+				
+				if (in.get("Resultat").equals("W")){
+					scoreClient += 1;
+					reponse = "Manche gagnée, ";
+				} else if (in.get("Resultat").equals("L")){
+					scoreAdver += 1;
+					reponse = "Manche perdue, ";
+				} else if (in.get("Resultat").equals("E")){
+					reponse = "Egalité, ";
+				} else if (in.get("Resultat").equals("A")){
+					reponse = "Votre adversaire a abandonné, vous avez gagné";
+					abandon = true;
+				}
+				
+				if (!abandon){
+					if (scoreClient == 5){
+						reponse = "Bien joué, vous avez gagné!";
+					} else if (scoreAdver == 5){
+						reponse = "Vous avez perdu, abruti!";
+					} else {
+						reponse += "veuillez choisir un mouvement.";
+					}
+				}
+
+		        lScoreClient.setText(Integer.toString(scoreClient));
+		        lScoreAdver.setText(Integer.toString(scoreAdver));
+		        lresultat.setText(reponse);
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         } catch (JSONException e){
         	System.out.println("Problème lors de l'envoi : " + e.getMessage());
             
@@ -248,15 +299,17 @@ public class maFrame extends JFrame implements ActionListener {
 			System.exit(0);
 		}
         else if (e.getSource() == bCiseaux || e.getSource() == bPapier || e.getSource() == bPierre){
-        	JButton sender = (JButton) e.getSource();
-        	JSONObject obj = new JSONObject();
-        	try {
-				obj.accumulate("valeur", sender.getActionCommand());
-			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-        	this.envoyer(obj);
+        	if (scoreClient < 5 && scoreAdver < 5){
+	        	JButton sender = (JButton) e.getSource();
+	        	JSONObject obj = new JSONObject();
+	        	try {
+					obj.accumulate("valeur", sender.getActionCommand());
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+	        	this.envoyer(obj);
+        	}
         }
     }
 }

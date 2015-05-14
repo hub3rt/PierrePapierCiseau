@@ -39,7 +39,7 @@ public class Serveur {
                 if (lesJoueurs.size()==2){
                    
                    ServerManager SM = new ServerManager(lesJoueurs.get(0), lesJoueurs.get(1), compteur, compteur +1);
-                   //new Thread(SM).start();
+                   new Thread(SM).start();
                    lesJoueurs.clear();
                    compteur += 2;
                    if (compteur == 1284){
