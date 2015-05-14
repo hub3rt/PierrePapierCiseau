@@ -84,7 +84,7 @@ public class maFrame extends JFrame implements ActionListener {
         JLabel lBandeau = new JLabel(iBandeau);
         jBandeau.add(lBandeau);
         
-        // Le panel Central, contenant choix, score et affichage du résultat
+        // Le panel Central, contenant choix, score et affichage du resultat
         
         JPanel jCentre = new JPanel();
         this.add(jCentre, BorderLayout.CENTER);
@@ -141,7 +141,7 @@ public class maFrame extends JFrame implements ActionListener {
         JPanel jScoreClient = new JPanel();
         jScores.add(jScoreClient, BorderLayout.WEST);
         
-        JLabel lScoreClient = new JLabel();
+        lScoreClient = new JLabel();
         lScoreClient.setText("0");
         lScoreClient.setFont(new Font("Sans-Serif", Font.PLAIN, 60));
         jScoreClient.setPreferredSize(new Dimension(100, 100));
@@ -149,7 +149,7 @@ public class maFrame extends JFrame implements ActionListener {
         jScoreClient.setBackground(Color.white);
         jScoreClient.add(lScoreClient);
         
-        // Un panel d'écartement
+        // Un panel d'ecartement
         JPanel jEcartement = new JPanel();
         jScores.add(jEcartement, BorderLayout.CENTER);
         jEcartement.setPreferredSize(new Dimension(100, 100));
@@ -158,7 +158,7 @@ public class maFrame extends JFrame implements ActionListener {
         JPanel jScoreAdver = new JPanel();
         jScores.add(jScoreAdver, BorderLayout.EAST);
         
-        JLabel lScoreAdver = new JLabel();
+        lScoreAdver = new JLabel();
         lScoreAdver.setText("3");
         lScoreAdver.setFont(new Font("Sans-Serif", Font.PLAIN, 60));
         jScoreAdver.setPreferredSize(new Dimension(100, 100));
@@ -180,7 +180,7 @@ public class maFrame extends JFrame implements ActionListener {
         lTextClient.setText("Vous");
         jTextClient.add(lTextClient);
         
-        // Un panel d'écartement
+        // Un panel d'ecartement
         JPanel jTextEcartement = new JPanel();
         jTextEcartement.setPreferredSize(new Dimension(100, 30));
         jTextesIdent.add(jTextEcartement);
@@ -194,7 +194,7 @@ public class maFrame extends JFrame implements ActionListener {
         lTextAdver.setText("Adversaire");
         jTextAdver.add(lTextAdver);
         
-        // Le panel affichant le résultat
+        // Le panel affichant le resultat
         
         JPanel jResultat = new JPanel();
         jCentre.add(jResultat, BorderLayout.SOUTH);
@@ -215,13 +215,12 @@ public class maFrame extends JFrame implements ActionListener {
     }
 
     
-    //TODO MÃ©thode pour rÃ©cupÃ©rer et envoyer la valeur du radio button choisi
+    //TODO Methode pour recuperer et envoyer la valeur du radio button choisi
     public void envoyer(JSONObject obj){
         
         try {
             //En fonction du bouton, on envoie la valeur au coeur.
             obj.accumulate("Commande", "Jouer");
-            System.out.println(obj.toString());
             out.println(obj.toString());
         } catch (JSONException e){
         	System.out.println("Problème lors de l'envoi : " + e.getMessage());

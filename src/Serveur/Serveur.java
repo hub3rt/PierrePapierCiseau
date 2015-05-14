@@ -21,13 +21,10 @@ public class Serveur {
     public Serveur(int portNumber) {
 
         
-        int compteur = 10000 ;
+        int compteur = 1234 ;
         ArrayList<ServeurThread> lesJoueurs = new ArrayList<ServeurThread>();
 
         try {
-        	
-//        	Socket sok = new Socket("localhost", 1234);
-//        	out = new PrintWriter(sok.getOutputStream(), true);
         	
             ServerSocket ss = new ServerSocket(portNumber);
             System.out.println("Coucou, ici le serveur.");
@@ -37,14 +34,15 @@ public class Serveur {
                 Socket s = ss.accept();
                 ServeurThread st = new ServeurThread(s);
                 new Thread(st).start();
-                System.out.println("Un client est connectÃ© sur le socket "+s);
+                System.out.println("Un client est connecté sur le socket "+s);
                 lesJoueurs.add(st);
                 if (lesJoueurs.size()==2){
                    
                    ServerManager SM = new ServerManager(lesJoueurs.get(0), lesJoueurs.get(1), compteur, compteur +1);
+                   //new Thread(SM).start();
                    lesJoueurs.clear();
                    compteur += 2;
-                   if (compteur == 10100){
+                   if (compteur == 1284){
                        break;
                    }
                 }
