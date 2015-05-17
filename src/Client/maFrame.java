@@ -32,12 +32,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.sun.org.apache.xpath.internal.operations.Lte;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 /**
  *
  * @author Hubert
  */
-public class maFrame extends JFrame implements ActionListener {
+public class maFrame extends JFrame implements ActionListener, MouseMotionListener {
     
     /**
 	 * 
@@ -69,7 +72,11 @@ public class maFrame extends JFrame implements ActionListener {
         this.setPreferredSize(new Dimension(620, 660));
         this.setMinimumSize(new Dimension(620, 660));
         this.setResizable(false);
+        this.setUndecorated(true);
         this.setLocationRelativeTo(null);
+        addMouseMotionListener(this);
+        
+        
         
         // Le panel du Bandeau
         
@@ -122,6 +129,8 @@ public class maFrame extends JFrame implements ActionListener {
         bPierre.addActionListener(this);
         bPapier.addActionListener(this);
         bCiseaux.addActionListener(this);
+        
+        this.desactiveBouton();
         
         // Le panel d'affichage du score, qui va contenir un panel d'affichage de texte "score:",
         //        un panel d'affichage de score, et les textes permettant d'identifier é qui sont les scores
@@ -220,8 +229,12 @@ public class maFrame extends JFrame implements ActionListener {
         this.setVisible(true);
         
 		try {
-			in = new JSONObject(br.readLine());
-	        lresultat.setText("Adversaire connecté, veuillez choisir un mouvement.");
+                        in = new JSONObject(br.readLine());
+                        lresultat.setText("Adversaire connecté, veuillez choisir un mouvement.");
+                        
+                        bCiseaux.setEnabled(true);
+                        bPierre.setEnabled(true);
+                        bPapier.setEnabled(true);
 		} catch (JSONException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -252,17 +265,17 @@ public class maFrame extends JFrame implements ActionListener {
 					reponse = "Egalité, ";
 				} else if (in.get("Resultat").equals("A")){
 					reponse = "Votre adversaire a abandonné, vous avez gagné";
-                                        bCiseaux.setEnabled(false);
-                                        bPierre.setEnabled(false);
-                                        bPapier.setEnabled(false);
+                                        this.desactiveBouton();
 					abandon = true;
 				}
 				
 				if (!abandon){
 					if (scoreClient == 5){
 						reponse = "Bien joué, vous avez gagné!";
+                                                this.desactiveBouton();
 					} else if (scoreAdver == 5){
 						reponse = "Vous avez perdu, abruti!";
+                                                this.desactiveBouton();
 					} else {
 						reponse += "veuillez choisir un mouvement.";
 					}
@@ -293,6 +306,12 @@ public class maFrame extends JFrame implements ActionListener {
         }
     }
     
+    public void desactiveBouton(){
+        bPierre.setEnabled(false);
+        bCiseaux.setEnabled(false);
+        bPapier.setEnabled(false);
+    }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         
@@ -314,5 +333,15 @@ public class maFrame extends JFrame implements ActionListener {
 	        	this.envoyer(obj);
         	}
         }
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        setLocation(getLocation().x+e.getX(), getLocation().y+e.getY());
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        
     }
 }
