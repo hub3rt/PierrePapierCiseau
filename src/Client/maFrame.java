@@ -55,12 +55,16 @@ public class maFrame extends JFrame implements ActionListener, MouseMotionListen
     private int scoreClient, scoreAdver;
     private boolean abandon = false;
     
+    private Color bckColor, txtColor;
+    
     public maFrame (Socket ss){
         
     	scoreClient = 0;
     	scoreAdver = 0;
     	
-    	this.setBackground(Color.black);
+    	bckColor = Color.DARK_GRAY;
+    	
+    	txtColor = Color.LIGHT_GRAY;
     	
 		try {
 			out = new PrintWriter(ss.getOutputStream(), true);
@@ -78,12 +82,12 @@ public class maFrame extends JFrame implements ActionListener, MouseMotionListen
         this.setLocationRelativeTo(null);
         addMouseMotionListener(this);
         
-        
-        
         // Le panel du Bandeau
         
         JPanel jBandeau = new JPanel();
         this.add(jBandeau, BorderLayout.NORTH);
+        
+        jBandeau.setBackground(bckColor);
         
         BufferedImage img = null;
         try {
@@ -103,6 +107,8 @@ public class maFrame extends JFrame implements ActionListener, MouseMotionListen
         
         JPanel jCentre = new JPanel();
         this.add(jCentre, BorderLayout.CENTER);
+
+        jCentre.setBackground(bckColor);
         
         // Le panel de Choix
         
@@ -138,19 +144,29 @@ public class maFrame extends JFrame implements ActionListener, MouseMotionListen
         //        un panel d'affichage de score, et les textes permettant d'identifier é qui sont les scores
         
         JPanel jScore = new JPanel();
+        
+        jScore.setBackground(bckColor);
+        
         jCentre.add(jScore, BorderLayout.CENTER);
         jScore.setPreferredSize(new Dimension(600, 170));
         
         // Le panel affichant "Score :"
         JPanel jTextScore = new JPanel();
+        
+        jTextScore.setBackground(bckColor);
+        
         jScore.add(jTextScore, BorderLayout.NORTH);
         jTextScore.setPreferredSize(new Dimension(600, 20));
         JLabel lTextScore = new JLabel();
         lTextScore.setText("Score :");
+        lTextScore.setForeground(txtColor);
         jTextScore.add(lTextScore);
         
         // Le panel affichant les Scores
         JPanel jScores = new JPanel();
+        
+        jScores.setBackground(bckColor);
+        
         jScore.add(jScores, BorderLayout.CENTER);
         jScores.setPreferredSize(new Dimension(600, 100));
         
@@ -168,6 +184,9 @@ public class maFrame extends JFrame implements ActionListener, MouseMotionListen
         
         // Un panel d'ecartement
         JPanel jEcartement = new JPanel();
+        
+        jEcartement.setBackground(bckColor);
+        
         jScores.add(jEcartement, BorderLayout.CENTER);
         jEcartement.setPreferredSize(new Dimension(100, 100));
         
@@ -185,6 +204,9 @@ public class maFrame extends JFrame implements ActionListener, MouseMotionListen
         
         // Le panel affichant les textes "vous" et "adversaire"
         JPanel jTextesIdent = new JPanel();
+        
+        jTextesIdent.setBackground(bckColor);
+        
         jScore.add(jTextesIdent, BorderLayout.CENTER);
         jTextesIdent.setPreferredSize(new Dimension(600, 30));
         
@@ -199,6 +221,9 @@ public class maFrame extends JFrame implements ActionListener, MouseMotionListen
         
         // Un panel d'ecartement
         JPanel jTextEcartement = new JPanel();
+        
+        jTextEcartement.setBackground(bckColor);
+        
         jTextEcartement.setPreferredSize(new Dimension(100, 30));
         jTextesIdent.add(jTextEcartement);
         
@@ -214,15 +239,22 @@ public class maFrame extends JFrame implements ActionListener, MouseMotionListen
         // Le panel affichant le resultat
         
         JPanel jResultat = new JPanel();
+
+        jResultat.setBackground(bckColor);
+        
         jCentre.add(jResultat, BorderLayout.SOUTH);
         lresultat = new JLabel();
         lresultat.setText("En attente de connection d'un adversaire.");
+        lresultat.setForeground(txtColor);
         jResultat.add(lresultat);
         
         // Le panel permettant de quitter
         
         JPanel jQuitter = new JPanel();
         this.add(jQuitter, BorderLayout.SOUTH);
+        
+        jQuitter.setBackground(bckColor);
+        
         jQuitter.add(bQuitter= new JButton("Quitter"));
         bQuitter.addActionListener(this);
 
