@@ -213,7 +213,7 @@ public class maFrame extends JFrame implements ActionListener, MouseMotionListen
         // Le panel affichant "vous"
         JPanel jTextClient = new JPanel();
         jTextClient.setPreferredSize(new Dimension(100, 30));
-        jTextClient.setBackground(Color.green);
+        jTextClient.setBackground(new Color(119, 192, 217));
         jTextesIdent.add(jTextClient);
         JLabel lTextClient = new JLabel();
         lTextClient.setText("Vous");
@@ -230,7 +230,7 @@ public class maFrame extends JFrame implements ActionListener, MouseMotionListen
         // Le panel affichant "adversaire"
         JPanel jTextAdver = new JPanel();
         jTextAdver.setPreferredSize(new Dimension(100, 30));
-        jTextAdver.setBackground(Color.yellow);
+        jTextAdver.setBackground(new Color(247, 149, 60));
         jTextesIdent.add(jTextAdver);
         JLabel lTextAdver = new JLabel();
         lTextAdver.setText("Adversaire");
