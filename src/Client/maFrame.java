@@ -252,6 +252,9 @@ public class maFrame extends JFrame implements ActionListener {
 					reponse = "Egalité, ";
 				} else if (in.get("Resultat").equals("A")){
 					reponse = "Votre adversaire a abandonné, vous avez gagné";
+                                        bCiseaux.setEnabled(false);
+                                        bPierre.setEnabled(false);
+                                        bPapier.setEnabled(false);
 					abandon = true;
 				}
 				
