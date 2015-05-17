@@ -82,9 +82,11 @@ public class ServeurThread implements Runnable {
                 } else if (inObj.get("Commande").equals("Quitter")){
                     System.out.println("Le joueur a quitté la partie.");
 
-                    outObjManager = new JSONObject();
-                    outObjManager.accumulate("Etat", "Quitter");
-        			outManager.println(outObjManager.toString());
+                    if (outManager != null){
+                        outObjManager = new JSONObject();
+                        outObjManager.accumulate("Etat", "Quitter");
+            			outManager.println(outObjManager.toString());
+                    }
         			
                     isAlive = false;
                     break;

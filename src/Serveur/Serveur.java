@@ -49,7 +49,7 @@ public class Serveur {
             } 
             ss.close();
         } catch (IOException ex) {
-            Logger.getLogger(Serveur.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Un client s'est déconnecté avant d'avoir un adversaire.");
         }
     }
 

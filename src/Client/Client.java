@@ -23,7 +23,6 @@ public class Client {
             	Socket ss = new Socket(ip, port);
                 maFrame frame = new maFrame(ss);
                 frame.setVisible(true);
-                frame.setBackground(Color.darkGray);
             }
         catch (Exception e) {
                 System.out.println("Problème client : "+e.getMessage());}

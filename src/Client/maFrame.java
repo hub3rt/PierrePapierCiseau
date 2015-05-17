@@ -60,6 +60,8 @@ public class maFrame extends JFrame implements ActionListener, MouseMotionListen
     	scoreClient = 0;
     	scoreAdver = 0;
     	
+    	this.setBackground(Color.black);
+    	
 		try {
 			out = new PrintWriter(ss.getOutputStream(), true);
 			br = new BufferedReader(new InputStreamReader(ss.getInputStream()));
@@ -298,9 +300,9 @@ public class maFrame extends JFrame implements ActionListener, MouseMotionListen
     public void quitter(){
         
         try {
-            JSONObject obj = new JSONObject();
-            obj.accumulate("Commande", "Quitter");
-            out.println(obj.toString());
+	        JSONObject obj = new JSONObject();
+	        obj.accumulate("Commande", "Quitter");
+	        out.println(obj.toString());
         } catch (JSONException e) {
             System.out.println("Problème lors de la fermeture : " + e.getMessage());
         }
